@@ -1,0 +1,90 @@
+\documentclass[11pt,aps,prd,onecolumn,floatfix, tightenlines,shownopacs,showkeys,preprintnumbers,nofootinbib, longbibliography,notitlepage]{revtex4-1}
+\pdfoutput=1
+\usepackage[colorlinks=true,citecolor=red,linkcolor=blue,breaklinks=true]{hyperref}
+\usepackage{amsmath,amssymb,mathtools,tabu}
+\usepackage{epsfig, epstopdf}  
+\usepackage{graphicx}   
+\usepackage{commath}
+\usepackage{slashed}             
+\usepackage{url}
+\usepackage{color}
+\usepackage{multirow}
+\usepackage{placeins}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{comment}
+%\usepackage[utf8]{inputenc}
+\clubpenalty=1000
+\widowpenalty=10000
+
+\allowdisplaybreaks
+\setlength{\bibsep}{0cm}
+\bibpunct{[}{]}{,}{n}{}{,}
+
+\newcommand{\ad}[1]{{\color{red}#1}}%red
+\newcommand{\dth}{d^\mathrm{th}}
+\newcommand{\lik}{\mathcal{L}}
+
+\def\prd{Phys.Rev.D}         % Physical Review D
+\def\apss{Astrophysics and Space Science}
+\def\apj{ApJ}
+\def\mnras{MNRAS}
+\def\thesection{\Roman{section}}
+
+\begin{document}
+	\title{Notes on Model Fitting to Data}
+	
+	\author{Anirban Das}
+	%\email{anirban@theory.tifr.res.in }                  
+	%
+	%\affiliation{Tata Institute of Fundamental Research,
+	%             Homi Bhabha Road, Mumbai, 400005, India.}
+	
+	%\preprint{TIFR/TH/17-XX}
+	\bigskip
+	
+	\date{\today}
+	%=============================================================================
+	
+	\maketitle
+	
+	Suppose, we want to explain an observation of some spectrum using a theory model. The data is given by an array $d_i$. The corresponding theory predictions are $\dth_i$. This $\dth_i$ includes both signal and background, $\dth_i \equiv s_i + b_i$. Therefore the likelihood for this theory is
+	\begin{equation}
+	-2\ln\lik = \sum_i\dfrac{(d_i - \dth_i)^2}{\sigma_i^2}\,.
+	\end{equation}
+	Here $\sigma_i$ are the total systematic and statistical errors of the data. This is valid only if the data $d_i$ are independent. If this is not the case and they have a covariance matrix $\mathbf{V}$ then
+	\begin{equation}
+	-2\ln\lik = (\mathbf{d} - \mathbf{\dth})^T \mathbf{V}^{-1} (\mathbf{d} - \mathbf{\dth})\,.
+	\end{equation}
+	
+	Now if the we define the \emph{null hypothesis} likelihood $\lik_0$, i.e., when the data is explained with the background only
+	\begin{equation}
+	-2\ln\lik_0 = \sum_i\dfrac{(d_i - b_i)^2}{\sigma_i^2}\,,
+	\end{equation}
+	then the \emph{test statistics} $TS$ is defined as
+	\begin{equation}
+	TS = -2\ln\left(\dfrac{\lik_0}{\lik}\right)\,.
+	\end{equation}
+	Basically, $TS$ is the difference between the $\chi^2$s of the fits with and without signal. It can be calculated for a range of points in the parameter space of the theory. The point having the greatest $TS$ is expected to be best description of the data.
+	\bigskip
+	
+	\emph{We could just minimize $\chi^2$ to find the best-fit point. Why bother computing $TS$?}
+	
+	$TS$ is typically used for source detection in a skymap of, let's say gamma-ray. For example, Fermi collaboration uses this method to detect sources on the sky. In this case, the $TS$ formula is modified to the following
+	\begin{equation}
+	TS = -2\ln\left(\dfrac{\lik_\mathrm{max,0}}{\lik_\mathrm{max}}\right)
+	\end{equation}
+	where $\lik_\mathrm{max}$ is the maximum likelihood found by minimizing $\chi^2$ varying all parameters of the model. The $TS$ is then the relative measurement of fitting with and without a source at a particular position in the sky\footnote{\href{https://fermi.gsfc.nasa.gov/ssc/data/analysis/documentation/Cicerone/Cicerone\_Likelihood/Likelihood\_overview.html}{Fermi likelihood overview.}}.
+	\bigskip
+	
+	\textbf{Small number of counts}
+	
+	If the count of particles in each data bin is small then the normal distribution cannot be used for likelihood calculation. The more appropriate function is the Poisson distribution,
+	\begin{equation}
+	P(n;\mu) = \dfrac{\mu^n \exp^{-\mu}}{n!}\,.
+	\end{equation}
+	Therefore
+	\begin{equation}
+	\lik = \prod_i \dfrac{(\dth_i)^{d_i} }{d_i!} \exp(-\dth_i) = \exp(-N_\mathrm{exp}) \prod_i \dfrac{(\dth_i)^{d_i}}{d_i!}\,,
+	\end{equation}
+	where $N_\mathrm{exp}$ is the total expected count in all bins\footnote{See \href{https://fermi.gsfc.nasa.gov/ssc/data/analysis/documentation/Cicerone/Cicerone\_Likelihood/Likelihood\_formula.html}{this} for more about binning issues.}.
+\end{document}
